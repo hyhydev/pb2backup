@@ -121,6 +121,60 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 });
 
 /**
+ * Reusable middleware that enforces users are logged and admin in before running the
+ * procedure.
+ */
+const enforceUserIsContributorOrAbove = t.middleware(({ ctx, next }) => {
+  console.log(ctx.session?.user.role);
+  if (
+    !ctx.session ||
+    !ctx.session.user ||
+    !["CONTRIBUTOR", "MODERATOR", "ADMIN"].includes(ctx.session.user.role)
+  ) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+const enforceUserIsModeratorOrAbove = t.middleware(({ ctx, next }) => {
+  console.log(ctx.session?.user.role);
+  if (
+    !ctx.session ||
+    !ctx.session.user ||
+    !["MODERATOR", "ADMIN"].includes(ctx.session.user.role)
+  ) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
+  if (
+    !ctx.session ||
+    !ctx.session.user ||
+    !["ADMIN"].includes(ctx.session.user.role)
+  ) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+/**
  * Protected (authenticated) procedure
  *
  * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
@@ -129,3 +183,10 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const contributorOrAboveProtectedProcedure = t.procedure.use(
+  enforceUserIsContributorOrAbove,
+);
+export const moderatorOrAboveProtectedProcedure = t.procedure.use(
+  enforceUserIsModeratorOrAbove,
+);
+export const adminProtectedProcedure = t.procedure.use(enforceUserIsAdmin);

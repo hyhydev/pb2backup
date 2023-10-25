@@ -1,9 +1,53 @@
 import { z } from "zod";
 
 import { Character, Environment, Speed, Stage, Type } from "@prisma/client";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { isUserModeratorOrAbove } from "~/utils/auth";
+import {
+  contributorOrAboveProtectedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "../trpc";
 
 export const playRouter = createTRPCRouter({
+  create: contributorOrAboveProtectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        videoUrl: z.string(),
+        thumbnalUrl: z.string().optional(),
+        description: z.string().optional(),
+        type: z.nativeEnum(Type),
+        speed: z.nativeEnum(Speed),
+        environment: z.nativeEnum(Environment),
+        character: z.nativeEnum(Character),
+        stage: z.nativeEnum(Stage),
+        difficulty: z.number().int().min(1).max(5),
+        gameAbbr: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.game.update({
+        where: { abbreviation: input.gameAbbr },
+        data: {
+          plays: {
+            create: {
+              userId: ctx.session.user.id,
+              name: input.name,
+              videoUrl: input.videoUrl,
+              thumbnailUrl: input.thumbnalUrl,
+              description: input.description,
+              type: input.type,
+              speed: input.speed,
+              environment: input.environment,
+              character: input.character,
+              stage: input.stage,
+              difficulty: input.difficulty,
+              approved: isUserModeratorOrAbove(ctx.session.user.role),
+            },
+          },
+        },
+      });
+    }),
   getAllApproved: publicProcedure
     .input(
       z.object({

@@ -18,14 +18,14 @@ export function HeaderFirstSection() {
       <Button onClick={toggle} variant="ghost" size="icon">
         <Menu />
       </Button>
-      <Link href="/">
+      <Link className="flex items-center gap-4" href="/">
         <Image
-          src="https://i.imgur.com/oIMyQmn.png"
-          alt="logo"
-          width={48}
-          height={48}
-          className="h-12"
+          src="/images/logo/light.png"
+          alt="Playbook Logo"
+          width="64"
+          height="64"
         />
+        <h1 className="text-xl font-bold tracking-tight">Playbook</h1>
       </Link>
     </div>
   );

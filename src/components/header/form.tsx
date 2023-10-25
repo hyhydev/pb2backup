@@ -23,7 +23,7 @@ export function HeaderForm() {
           <ArrowLeft />
         </Button>
       )}
-      <div className="flex flex-grow">
+      <div className="flex flex-grow items-center">
         <Input
           type="search"
           placeholder="Search"

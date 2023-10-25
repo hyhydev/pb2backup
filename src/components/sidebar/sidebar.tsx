@@ -4,7 +4,7 @@ import {
   ChevronDown,
   ChevronUp,
   Home,
-  List,
+  ListVideo,
   Plus,
   Star,
 } from "lucide-react";
@@ -54,13 +54,14 @@ import { HeaderFirstSection } from "../header/first_section";
 //   },
 // ];
 
-// const playlists = [
-//   { id: "1", name: "Frontend & Backend" },
-//   { id: "2", name: "Favorites" },
-//   { id: "3", name: "React" },
-//   { id: "4", name: "Non-Dev" },
-//   { id: "5", name: "TypeScript" },
-// ];
+const playlists = [
+  { id: "1", name: "Demo Playlist 1" },
+  { id: "2", name: "Demo Playlist 2" },
+  { id: "3", name: "Demo Playlist 3" },
+  { id: "4", name: "Demo Playlist 4" },
+  { id: "5", name: "Demo Playlist 5" },
+  { id: "5", name: "Demo Playlist 6" },
+];
 
 export function Sidebar() {
   const { data: session } = useSession();
@@ -103,26 +104,6 @@ export function Sidebar() {
         </LargeSidebarSection>
         <hr />
         <LargeSidebarSection title="Playlists" visibleItemCount={5}>
-          <LargeSidebarItem
-            IconOrImgUrl={List}
-            title="Playlist 1"
-            url="/list/temp"
-          />
-          {/* <LargeSidebarItem
-            IconOrImgUrl={History}
-            title="History"
-            url="/history"
-          />
-          <LargeSidebarItem
-            IconOrImgUrl={PlaySquare}
-            title="Your Videos"
-            url="/your-videos"
-          />
-          <LargeSidebarItem
-            IconOrImgUrl={Clock}
-            title="Watch Later"
-            url="/playlist?list=WL"
-          />
           {playlists.map((playlist) => (
             <LargeSidebarItem
               key={playlist.id}
@@ -130,7 +111,7 @@ export function Sidebar() {
               title={playlist.name}
               url={`/playlist?list=${playlist.id}`}
             />
-          ))} */}
+          ))}
         </LargeSidebarSection>
         {/* <hr />
         <LargeSidebarSection title="Subscriptions">

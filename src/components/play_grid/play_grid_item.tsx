@@ -24,6 +24,8 @@ export function PlayGridItem({
   createdAt,
   thumbnailUrl,
   videoUrl,
+  character,
+  type,
 }: PlayGridItemProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -81,7 +83,7 @@ export function PlayGridItem({
             {name}
           </a>
           <a href={`/@${user.id}`} className="text-sm">
-            Play info here
+            {character} • {type}
           </a>
           <a href={`/@${user.id}`} className="text-sm">
             {VIEW_FORMATTER.format(bookmarks.length)} Likes •{" "}

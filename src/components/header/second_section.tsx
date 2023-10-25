@@ -1,11 +1,20 @@
-import { Bell, LogIn, Plus, Search } from "lucide-react";
+import { Bell, LogIn, Search } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { Button } from "~/components/ui/button";
 import { useUIStore } from "~/stores/uiStore";
+import { PlayForm } from "../play_form/play_form";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export function HeaderSecondSection() {
   const { data: session, status: sessionStatus } = useSession();
+  const { push } = useRouter();
   const { fullWidthSearch, showFullWidthSearch } = useUIStore();
 
   return (
@@ -22,21 +31,43 @@ export function HeaderSecondSection() {
       >
         <Search />
       </Button>
-      <Button size="icon" variant="ghost">
+      {/* <Button size="icon" variant="ghost">
         <Plus />
-      </Button>
+      </Button> */}
+      <PlayForm />
       <Button size="icon" variant="ghost">
         <Bell />
       </Button>
       {sessionStatus === "loading" ? (
         <div>Loading...</div>
       ) : session ? (
-        <Button size="icon" variant="link" onClick={() => void signOut()}>
-          <Avatar>
-            <AvatarImage src={session.user.image ?? ""} />
-            <AvatarFallback>?</AvatarFallback>
-          </Avatar>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            asChild
+            className="rounded-r-none focus-visible:ring-transparent"
+          >
+            <Button size="icon" variant="link">
+              <Avatar>
+                <AvatarImage src={session.user.image ?? ""} />
+                <AvatarFallback>?</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => push(`/user/${session.user.id}`)}
+            >
+              My Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => void signOut()}
+            >
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <Button size="icon" variant="link" onClick={() => void signIn()}>
           <LogIn />
